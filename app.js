@@ -15,7 +15,7 @@ app.listen(port, () => {
     initFunc();
 })
 
-app.get('/', (req, res) => {
+app.get('/nodeModuler', (req, res) => {
     res.sendFile(__dirname + '/client/index.html');
 })
 

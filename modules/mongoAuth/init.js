@@ -2,8 +2,11 @@ const mongoose = require('mongoose');
 const mongoDBConfig = require('./config');
 const njwt = require('njwt');
 const bcrypt = require('bcrypt');
+const secureRandom = require('secure-random')
 
 const userModel = require('./models/user');
+
+const signingKey = secureRandom(256,{ type: "Buffer" });
 
 module.exports = (app, express) => {
     if (mongoose.connection.readyState === 0) {
@@ -27,25 +30,24 @@ module.exports = (app, express) => {
                     res.status(500).send(err);
                     throw err;
                 } else {
-                    bcrypt.compare(req.body.password, user.password, (error, same) => {
+                    bcrypt.compare(req.body.password, user.password, async (error, same) => {
                         if (error) {
                             res.status(500).send(err);
                             throw err;
                         } else {
                             if (same) {
-                                const signingKey = secureRandom(256,
-                                                    { type: "Buffer" });
-    
                                 const claims = {
                                     iss: "http://nodemoduler.com/",  // The URL of your service
                                     sub: "users/" + req.body.username
                                 };
     
-                                const userObject = user;
-                                const jwt = njwt.create(claims, signingKey);
-                                userObject.jwt = jwt;
+                                let userObject = user;
+                                let jwt = njwt.create(claims, signingKey);
+                                let token = jwt.compact()
+                                userObject.token = token;
+                                console.log(userObject)
     
-                                res.status(200).send(userObject);
+                                res.status(200).json({token: token, user: userObject});
                             }
                         }
                     });
@@ -107,6 +109,20 @@ module.exports = (app, express) => {
                         })
                         
                     }
+                }
+            })
+        }
+    })
+
+    app.post('/mongoAuth/verify', (req, res) => {
+        if(req.body.token){
+            njwt.verify(req.body.token, signingKey, (err, verified) => {
+                if(err){
+                    console.log(err)
+                    res.status(500).send(err)
+                }else{
+                    console.log(verified)
+                    res.status(200).send(verified)
                 }
             })
         }
