@@ -1,8 +1,8 @@
-const address = "ds125302.mlab.com"
-const port = "25302"
-const database = "mongo-auth-test-database"
-const username = "testUser"
-const password = "testUser1"
+const address = "localhost"
+const port = "27017"
+const database = "admin"
+const username = "myUserAdmin"
+const password = "admin"
 
 module.exports = {
     address,

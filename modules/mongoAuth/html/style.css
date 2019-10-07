@@ -15,12 +15,128 @@ body{
     padding: 0px;
 }
 
-.mainContainer{
+.topBar{
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.menuOption{
+    padding: 10px;
+}
+
+.menuOption > a{
+    padding-bottom: 4px;
+    border-bottom: .5px solid #BF1717;
+    color: rgb(24, 24, 24);
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+}
+
+.menuOption > a:active{
+    color: rgb(24, 24, 24);
+    text-decoration: none;
+}
+
+.contentContainer{
     background-color: rgb(245, 245, 245);
-    width: 100%;
+    width: 100vw;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.tableContainer{
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px #F21D1D55;
+    width: 90%;
+    overflow: hidden;
+    background-color: #fcfcfc;
+}
+
+.tableToolbar{
+    border-bottom: 1px solid rgb(197, 197, 197);
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.tableTitle{
+    font-family: Roboto, sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    flex-grow: 1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.tableAddItemBtn{
+    color: #f5f5f5;
+    font-family: Roboto, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    background-color: #F21D1D;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    transition-duration: 200ms;
+    box-shadow: 0px 0px 0px #BF1717;
+}
+
+.tableAddItemBtn:hover{
+    background-color: #BF1717;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(191, 23, 23, 0.507);
+}
+
+.tableAddItemBtn::selection{
+    color: #f5f5f5;
+    background-color: rgba(242, 29, 29, 0);
+}
+
+.tableItem{
+    font-family: Roboto, sans-serif;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: row;
+    transition-duration: 200ms;
+}
+
+.tableItem:hover{
+    background-color: #dadada;
+    cursor: pointer;
+}
+
+.tableItemName{
+    font-weight: 200;
+    font-size: 15px;
+}
+
+.tableItemName::selection{
+    color: #000000;
+    background-color: #ffffff00;
+}
+
+.tableItemEmail{
+    font-weight: 200;
+    font-size: 15px;
+    flex-grow: 1;
+}
+
+.tableItemEmail::selection{
+    color: #000000;
+    background-color: #ffffff00;
 }

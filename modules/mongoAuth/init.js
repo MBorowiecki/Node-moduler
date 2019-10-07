@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const secureRandom = require('secure-random')
 
 const userModel = require('./models/user');
+const roleModel = require('./models/role');
 
 const signingKey = secureRandom(256,{ type: "Buffer" });
 
@@ -64,7 +65,7 @@ module.exports = (app, express) => {
                     throw err
                 }else{
                     if(users.length > 0){
-                        res.status(200).json({msg: 'Another user with this email is in database.'})
+                        res.status(409).json({msg: 'Another user with this email is in database.'})
                     }else{
                         await bcrypt.genSalt(10, async(err, salt) => {
                             if(err)
@@ -123,6 +124,83 @@ module.exports = (app, express) => {
                 }else{
                     console.log(verified)
                     res.status(200).send(verified)
+                }
+            })
+        }
+    })
+
+    app.get('/mongoAuth/users', (req, res) => {
+        userModel.find({}, (err, users) => {
+            if(err){
+                console.log(err)
+                res.status(500).send(err)
+            }else{
+                let finalUsers = []
+
+                users.forEach(user => {
+                    delete user.password
+                    finalUsers.push(user)
+                })
+
+                res.status(200).send(finalUsers)
+            }
+        })
+    })
+
+    app.post('/mongoAuth/createRole', (req, res) => {
+        if(req.body){
+            roleModel.find({name: req.body.name}, (err, roles) => {
+                if(err){
+                    res.status(500).send(err);
+                    throw err;
+                }else{
+                    if(roles.length > 0){
+                        res.status(409).json({msg: 'There is role with this name.'})
+                    }else{
+                        let role = new roleModel({
+                            name: req.body.name
+                        })
+
+                        role.save((err, savedRole) => {
+                            if(err){
+                                res.status(500).send(err)
+                                throw err;
+                            }else{
+                                res.status(200).send(savedRole)
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    })
+
+    app.put('/mongoAuth/updateRole', (req, res) => {
+        if(req.body.role.updateRoles === true){
+            roleModel.find({_id: req.body.roleToUpdate._id}, async (err, roles) => {
+                if(err){
+                    res.status(500).send(err)
+                    throw err;
+                }else{
+                    if(roles.length === 0){
+                        res.status(409).json({msg: 'There is no role with this id'})
+                    }else{
+                        let errors = 0;
+                        let updated = 0;
+                        try{
+                            req.body.valueToUpdate.forEach(value => {
+                                roleModel.updateOne({_id: req.body.roleToUpdate._id}, {$set: {[value.name]: value.value}}, (err, docs) => {
+                                    if(err){
+                                        throw err;
+                                    }
+                                })
+                            })
+                        }catch(err){
+                            res.status(500).send(err)
+                        }finally{
+                            res.status(200).json({msg: 'Updated.'})
+                        }
+                    }
                 }
             })
         }
