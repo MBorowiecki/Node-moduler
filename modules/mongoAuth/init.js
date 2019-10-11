@@ -26,32 +26,34 @@ module.exports = (app, express) => {
 
     app.post("/mongoAuth/login", (req, res) => {
         if(req.body){
-            userModel.findOne({ username: req.body.username }, (err, user) => {
+            userModel.find({ email: req.body.email }, (err, user) => {
                 if (err) {
                     res.status(500).send(err);
                     throw err;
                 } else {
-                    bcrypt.compare(req.body.password, user.password, async (error, same) => {
-                        if (error) {
-                            res.status(500).send(err);
-                            throw err;
-                        } else {
-                            if (same) {
-                                const claims = {
-                                    iss: "http://nodemoduler.com/",  // The URL of your service
-                                    sub: "users/" + req.body.username
-                                };
-    
-                                let userObject = user;
-                                let jwt = njwt.create(claims, signingKey);
-                                let token = jwt.compact()
-                                userObject.token = token;
-                                console.log(userObject)
-    
-                                res.status(200).json({token: token, user: userObject});
+                    if(user.length > 0){
+                        bcrypt.compare(req.body.password, user[0].password, async (error, same) => {
+                            if (error) {
+                                res.status(500).send(err);
+                                throw err;
+                            } else {
+                                if (same) {
+                                    const claims = {
+                                        iss: "http://nodemoduler.com/",  // The URL of your service
+                                        sub: "users/" + req.body.email
+                                    };
+        
+                                    let userObject = user;
+                                    let jwt = njwt.create(claims, signingKey);
+                                    let token = jwt.compact()
+        
+                                    res.status(200).json({token: token, user: userObject[0]});
+                                }
                             }
-                        }
-                    });
+                        });
+                    }else{
+                        res.status(403).json({msg: 'No user with this email.'})
+                    }
                 }
             });
         }
@@ -176,7 +178,7 @@ module.exports = (app, express) => {
     })
 
     app.put('/mongoAuth/updateRole', (req, res) => {
-        if(req.body.role.updateRoles === true){
+        if(req.body.role.updateRoles){
             roleModel.find({_id: req.body.roleToUpdate._id}, async (err, roles) => {
                 if(err){
                     res.status(500).send(err)
@@ -200,6 +202,41 @@ module.exports = (app, express) => {
                         }finally{
                             res.status(200).json({msg: 'Updated.'})
                         }
+                    }
+                }
+            })
+        }else{
+            res.status(403).json({msg: 'No right to remove role.'})
+        }
+    })
+
+    app.delete('/mongoAuth/removeRole', (req, res) => {
+        if(req.body.role.removeRoles){
+            roleModel.findByIdAndRemove({_id: req.body.roleToRemove._id}, (err, docs) => {
+                if(err){
+                    res.status(500).send(err)
+                    throw err
+                }else{
+                    res.status(200).send(docs);
+                }
+            })
+        }else{
+            res.status(403).json({msg: 'No right to remove role.'})
+        }
+    })
+
+    app.post('/mongoAuth/getUserRoles', (req, res) => {
+        if(req.body._id){
+            userModel.findById(req.body._id, (err, user) => {
+                if(err){
+                    console.log(err)
+                    res.status(500).send(err)
+                    throw err;
+                }else{
+                    if(user){
+                        res.status(200).send(user.roles);
+                    }else{
+                        res.status(403).json({msg: 'No user with this _id.'})
                     }
                 }
             })

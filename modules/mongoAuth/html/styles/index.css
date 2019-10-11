@@ -1,0 +1,54 @@
+/*
+Colors: 
+    White background: #f5f5f5,
+    White: #F0F2F2,
+    Red: #F21D1D,
+    Dark Red: #BF1717,
+    Light Black: #404040,
+    Black: #0D0D0D,
+    Black text: rgb(24, 24, 24)
+*/
+
+body{
+    background-color: #f5f5f5;
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.loginContainer{
+    background-color: rgb(254, 255, 255);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 5px 20px #cacaca;
+}
+
+.loginForm{
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+}
+
+.loginBtn{
+    width: 100%;
+    border: none;
+    background-color: #F21D1D;
+    border-radius: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #f5f5f5;
+    font-size: 15px;
+    margin-top: 10px;
+    transition-duration: 200ms;
+    box-shadow: 0px 1px 0px #BF1717;
+}
+
+.loginBtn:hover{
+    cursor: pointer;
+    background-color: #BF1717;
+    box-shadow: 0px 1px 10px #BF1717;
+}

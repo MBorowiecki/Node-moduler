@@ -113,6 +113,29 @@ body{
     display: flex;
     flex-direction: row;
     transition-duration: 200ms;
+    align-items: center;
+}
+
+.roleRemoveBtn > i {
+    font-size: 20px;
+    color: #2c2c2c;
+    padding: 5px;
+}
+
+.roleRemoveBtn{
+    background-color: #88888800;
+    outline: none;
+    border: none;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    transition-duration: 200ms;
+}
+
+.roleRemoveBtn:hover{
+    cursor: pointer;
+    background-color: #bdbdbd;
+    box-shadow: 0px 2px 10px #a1a1a1;
 }
 
 .tableItem:hover{
